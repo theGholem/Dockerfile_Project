@@ -1,0 +1,29 @@
+# On s'appuie sur l'image ubuntu:22.04
+FROM ubuntu:24.04
+# Notre répertoire de travail
+# sera la racine du système de fichier
+# du conteneur
+WORKDIR / 
+# Notre image ne nécessite pas
+# particulièrement de copier un fichier.
+# Cependant, l'instruction suivante permettrait
+# de copier le répertoire ./messages de la
+# machine hôte vers le répertoire /data du conteneur
+# COPY ./messages /data
+RUN apt-get update && apt-get install -y cowsay dumb-init
+# Définition d'une variable d'environnement
+# "MESSAGE" avec en valeur par défaut "Mooo !!!"
+ENV MESSAGE="Hi, i'm KiRi's cow 🐄😜"
+# Utilisation de l'utilitaire "dumb-init"
+# comme point d'entrée de notre conteneur
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+# Définition de notre commande par défaut
+CMD ["/bin/bash", "-c", "/usr/games/cowsay $MESSAGE"]
+# Notre conteneur n'expose pas véritablement
+# de service réseau, les instructions EXPOSE
+# et VOLUMES n'ont donc pas de réelle utilité ici
+# EXPOSE 80
+# VOLUME /data
+# Définition d'une étiquette arbitraire sur notre image
+LABEL description="Un conteneur permettant d'afficher des messages humoristiques."
+
